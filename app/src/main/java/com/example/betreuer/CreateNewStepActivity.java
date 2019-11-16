@@ -19,8 +19,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -63,7 +61,7 @@ public class CreateNewStepActivity extends AppCompatActivity {
         // TODO: wipe this out
         TutorialCreationActivity.ctx.increaseTotalSteps();
         writeTextToStorage();
-        writeImageToDisk();
+        writeImageToStorage();
         finish();
     }
 
@@ -137,15 +135,6 @@ public class CreateNewStepActivity extends AppCompatActivity {
         return intent;
     }
 
-//    protected Bitmap handleOrientation(Bitmap bm){
-//        if (bm.getHeight() > bm.getWidth()){
-//            Matrix matrix = new Matrix();
-//            matrix.postRotate(-90);
-//            bm = Bitmap.createBitmap(bm, 0, 0, bm.getWidth(), bm.getHeight(), matrix, true);
-//        }
-//        return bm;
-//    }
-
     protected void writeTextToStorage() {
         File directory = new File(Environment.getExternalStorageDirectory() + "/Martinshof", getIntent().getStringExtra("title"));
         String subheader = ((EditText) findViewById(R.id.slide_subheader)).getText().toString();
@@ -156,19 +145,8 @@ public class CreateNewStepActivity extends AppCompatActivity {
             IOHelper.writeTextToStorage(directory, subheader, desc, stepNr);
         }
     }
-//    protected void writeImageToStorage(){
-//            // TODO: Think of a better solution for finding out the step number
-//            File directory = new File(Environment.getExternalStorageDirectory() + "/Martinshof", getIntent().getStringExtra("title"));
-//            int stepNumber = TutorialCreationActivity.ctx.getTotalSteps();
-//            ImageView iv = findViewById(R.id.image_view);
-//            BitmapDrawable draw = (BitmapDrawable) iv.getDrawable();
-//            Bitmap bitmap = draw.getBitmap();
-//            IOHelper.writeImageToStorage(directory, stepNumber, bitmap);
-//    }
 
-
-
-    protected void writeImageToDisk(){
+    protected void writeImageToStorage(){
         String dir = getIntent().getStringExtra("title");
         ImageView iv = findViewById(R.id.image_view);
         BitmapDrawable drawable = (BitmapDrawable) iv.getDrawable();
