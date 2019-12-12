@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -89,20 +90,22 @@ public class TutorialCreationActivity extends AppCompatActivity {
 
     private void openStringInputDialog(String message){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Gib hier den Namen der Anleitung ein.");
-        builder.setMessage(message);
-        // Set up the input
-        final EditText input = new EditText(this);
-        // Specify the type of input expected
-        input.setInputType(InputType.TYPE_CLASS_TEXT);
-        builder.setView(input);
+        builder.setTitle("Name der Anleitung:");
+
+        // set the custom layout (layout from xml)
+        final View customLayout = getLayoutInflater().inflate(R.layout.custom_layout, null);
+        builder.setView(customLayout);
+        TextView textMessage = customLayout.findViewById(R.id.text);
+        textMessage.setText(message);
+        final EditText editText = customLayout.findViewById(R.id.editText);
+        editText.setInputType(InputType.TYPE_CLASS_TEXT);
         // TODO: Improve Layout of EditText (centering, etc.)
 
         // Set up the buttons
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                String s = input.getText().toString();
+                String s = editText.getText().toString();
                 boolean tooLong = s.length() > 15;
                 boolean tooShort = s.length() < 2;
                 boolean alreadyExists = IOHelper.getTutorialNamesFromStorage().contains(s);
@@ -116,7 +119,7 @@ public class TutorialCreationActivity extends AppCompatActivity {
                     dialog.cancel();
                     openStringInputDialog("Fehler: Name existiert bereits.");
                 } else {
-                    m_tutorialName = input.getText().toString();
+                    m_tutorialName = editText.getText().toString();
                     createSubDirectory();
                 }
             }
@@ -128,7 +131,9 @@ public class TutorialCreationActivity extends AppCompatActivity {
                 startActivity(new Intent(getBaseContext(), MainActivity.class));
             }
         });
-        builder.show();
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     public void openCreateStepActivity(View view){

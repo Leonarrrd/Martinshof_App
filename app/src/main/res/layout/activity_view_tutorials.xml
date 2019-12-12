@@ -6,10 +6,38 @@
     android:layout_height="match_parent"
     tools:context=".ViewTutorialsActivity">
 
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_centerHorizontal="false"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:text="Tutorials"
+        android:textColor="#4D75C5"
+        android:textSize="36sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/line"
+        style="?android:attr/listSeparatorTextViewStyle"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#000"
+        android:gravity="center_horizontal"
+        android:paddingTop="5dip"
+        app:layout_constraintTop_toBottomOf="@+id/title" />
+
+
     <ListView
         android:id="@+id/listview"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="395dp"
+        android:layout_height="615dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"

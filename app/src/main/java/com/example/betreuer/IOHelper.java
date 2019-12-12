@@ -2,10 +2,8 @@ package com.example.betreuer;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Environment;
-import android.widget.EditText;
-import android.widget.ImageView;
+
 
 import java.io.BufferedReader;
 import java.io.File;

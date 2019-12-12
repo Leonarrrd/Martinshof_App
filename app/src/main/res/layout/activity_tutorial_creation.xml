@@ -17,10 +17,11 @@
         android:layout_marginTop="8dp"
         android:gravity="center"
         android:text="Title"
+        android:textColor="#4D75C5"
         android:textSize="36sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
         android:id="@+id/line"
@@ -34,14 +35,15 @@
 
     <Button
         android:id="@+id/button"
-        android:layout_width="296dp"
-        android:layout_height="46dp"
-        android:layout_marginTop="68dp"
-        android:background="@android:color/holo_orange_light"
+        android:layout_width="74dp"
+        android:layout_height="73dp"
+        android:layout_marginTop="48dp"
+        android:background="@drawable/roundedbutton"
         android:onClick="openCreateStepActivity"
-        android:text="Neuen Schritt hinzufügen"
+        android:text="+"
+        android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/listview" />
 
@@ -54,14 +56,16 @@
         android:scrollbarSize="15dip"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/title" />
+        app:layout_constraintTop_toBottomOf="@+id/title" >
+
+    </ListView>
 
     <Button
         android:id="@+id/button4"
         style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="120dp"
+        android:layout_width="206dp"
         android:layout_height="60dp"
-        android:background="@android:color/holo_blue_light"
+        android:background="@android:color/darker_gray"
         android:onClick="openTutorial"
         android:text="Vorschau"
         app:layout_constraintBaseline_toBaselineOf="@+id/button5"
@@ -73,9 +77,9 @@
     <Button
         android:id="@+id/button5"
         style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="120dp"
+        android:layout_width="206dp"
         android:layout_height="60dp"
-        android:background="@android:color/holo_green_light"
+        android:background="@android:color/darker_gray"
         android:onClick="finish"
         android:text="Fertig"
         app:layout_constraintBottom_toBottomOf="parent"

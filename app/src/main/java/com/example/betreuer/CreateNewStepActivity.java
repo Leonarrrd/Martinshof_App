@@ -14,6 +14,7 @@ import android.os.Environment;
 import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -54,7 +55,15 @@ public class CreateNewStepActivity extends AppCompatActivity {
             //stepNr greift vorher auf den Index zu, muss also jetzt um 1 erhöht werden
             stepNr++;
         }
+
     }
+
+    //wird benutzt, um Tastatur wieder zu verbergen, noch nicht implementiert
+//    public void hideSoftKeyboard()
+ //   {
+  //      InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+  //      inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+  //  }
 
     public void finish(View view){
         Environment.getExternalStorageState();
