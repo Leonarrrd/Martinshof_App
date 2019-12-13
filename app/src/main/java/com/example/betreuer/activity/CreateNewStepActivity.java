@@ -1,4 +1,4 @@
-package com.example.betreuer;
+package com.example.betreuer.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -14,10 +14,13 @@ import android.os.Environment;
 import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.example.betreuer.R;
+import com.example.betreuer.helper.IOHelper;
+import com.example.betreuer.helper.UIHelper;
 
 import java.io.File;
 import java.text.DateFormat;
@@ -59,7 +62,7 @@ public class CreateNewStepActivity extends AppCompatActivity {
     }
 
     //wird benutzt, um Tastatur wieder zu verbergen, noch nicht implementiert
-//    public void hideSoftKeyboard()
+ //    public void hideSoftKeyboard()
  //   {
   //      InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
   //      inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
@@ -67,8 +70,14 @@ public class CreateNewStepActivity extends AppCompatActivity {
 
     public void finish(View view){
         Environment.getExternalStorageState();
+        if(((EditText) findViewById(R.id.slide_subheader)).getText().toString().isEmpty()
+        || ((EditText) findViewById(R.id.slide_desc)).getText().toString().isEmpty()){
+            System.out.println("hm");
+            UIHelper.showErrorDialog(this, "Bitte gebe eine Überschrift und eine Erklärung ein.");
+            return;
+        }
         // TODO: wipe this out
-        TutorialCreationActivity.ctx.increaseTotalSteps();
+        CreateTutorialActivity.ctx.increaseTotalSteps();
         writeTextToStorage();
         writeImageToStorage();
         finish();

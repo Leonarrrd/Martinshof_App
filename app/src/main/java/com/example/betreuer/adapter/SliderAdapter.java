@@ -1,19 +1,16 @@
-package com.example.betreuer;
+package com.example.betreuer.adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import com.example.betreuer.R;
+import com.example.betreuer.helper.IOHelper;
+
 import java.util.ArrayList;
 import java.util.List;
 

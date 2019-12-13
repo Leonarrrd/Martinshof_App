@@ -1,4 +1,4 @@
-package com.example.betreuer;
+package com.example.betreuer.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
@@ -12,6 +12,9 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.betreuer.R;
+import com.example.betreuer.adapter.SliderAdapter;
 
 
 public class ViewTutorialActivity extends AppCompatActivity {

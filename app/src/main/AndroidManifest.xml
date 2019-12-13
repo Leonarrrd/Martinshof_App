@@ -6,24 +6,68 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
-
         android:allowBackup="true"
         android:icon="@mipmap/logo"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ViewTutorialActivity"></activity>
-        <activity android:name=".CreateNewStepActivity" />
-        <activity android:name=".TutorialCreationActivity" />
-        <activity android:name=".ViewTutorialsActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".activity.ReceiveTutorialActivity">
+            <!-- Register to handle file opening -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data
+                    android:host="*"
+                    android:mimeType="*/*"
+                    android:pathPattern=".*\\.tut"
+                    android:scheme="file" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="file" />
+                <data android:scheme="content" />
+                <data android:mimeType="*/*" />
+                <!--
+                    Work around Android's ugly primitive PatternMatcher
+                    implementation that can't cope with finding a . early in
+                    the path unless it's explicitly matched.
+                -->
+                <data android:host="*" />
+                <data android:pathPattern=".*\\.tut" />
+                <data android:pathPattern=".*\\..*\\.tut" />
+                <data android:pathPattern=".*\\..*\\..*\\.tut" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\.tut" />
+                <!-- keep going if you need more -->
+            </intent-filter>
+        </activity>
+        <activity android:name=".activity.ViewTutorialActivity" />
+        <activity android:name=".activity.CreateNewStepActivity" />
+        <activity android:name=".activity.CreateTutorialActivity" />
+        <activity android:name=".activity.ViewTutorialsActivity" />
+        <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+
         </activity>
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.mydomain.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
     </application>
 
 </manifest>

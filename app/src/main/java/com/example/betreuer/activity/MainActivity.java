@@ -1,4 +1,4 @@
-package com.example.betreuer;
+package com.example.betreuer.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -7,10 +7,11 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.view.View;
 
-import java.io.File;
+import com.example.betreuer.R;
+import com.example.betreuer.helper.IOHelper;
+import com.example.betreuer.helper.ShareHelper;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -29,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
                  intent = new Intent(this, ViewTutorialsActivity.class);
                  break;
             case "create_new_tutorial_btn":
-                intent = new Intent(this, TutorialCreationActivity.class);
+                intent = new Intent(this, CreateTutorialActivity.class);
                 break;
             default:
                 intent = new Intent(this, MainActivity.class);
@@ -45,5 +46,9 @@ public class MainActivity extends AppCompatActivity {
                         1001);
             }
         }
+    }
+
+    public void deleteMe(View view){
+        ShareHelper.shareTutorial(this,"yxxu");
     }
 }

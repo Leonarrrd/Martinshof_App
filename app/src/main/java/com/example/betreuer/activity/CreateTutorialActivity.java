@@ -1,14 +1,14 @@
-package com.example.betreuer;
+package com.example.betreuer.activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.InputType;
@@ -17,11 +17,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.example.betreuer.R;
+import com.example.betreuer.helper.UIHelper;
+import com.example.betreuer.helper.IOHelper;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -30,7 +33,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TutorialCreationActivity extends AppCompatActivity {
+public class CreateTutorialActivity extends AppCompatActivity {
 
     private String m_tutorialName = "";
     private ListView listView;
@@ -39,7 +42,7 @@ public class TutorialCreationActivity extends AppCompatActivity {
 
     // TODO: this is some hot garbage,
     // should use startActivityForResult() for this i guess
-    public static TutorialCreationActivity ctx;
+    public static CreateTutorialActivity ctx;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,6 +123,7 @@ public class TutorialCreationActivity extends AppCompatActivity {
                     openStringInputDialog("Fehler: Name existiert bereits.");
                 } else {
                     m_tutorialName = editText.getText().toString();
+                    ((TextView)findViewById(R.id.title)).setText(m_tutorialName);
                     createSubDirectory();
                 }
             }
