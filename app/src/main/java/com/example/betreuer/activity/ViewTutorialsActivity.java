@@ -94,7 +94,6 @@ public class ViewTutorialsActivity extends AppCompatActivity {
         }
     }
 
-
     class ListAdapter extends ArrayAdapter<String> {
         Context context;
         String[] titles;
