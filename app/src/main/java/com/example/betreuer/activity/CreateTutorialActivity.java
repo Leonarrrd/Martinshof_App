@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -21,9 +22,9 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.example.betreuer.helper.IOHelper;
 import com.example.betreuer.R;
 import com.example.betreuer.helper.UIHelper;
+import com.example.betreuer.helper.IOHelper;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -122,6 +123,7 @@ public class CreateTutorialActivity extends AppCompatActivity {
                     openStringInputDialog("Fehler: Name existiert bereits.");
                 } else {
                     m_tutorialName = editText.getText().toString();
+                    ((TextView)findViewById(R.id.title)).setText(m_tutorialName);
                     createSubDirectory();
                 }
             }

@@ -8,15 +8,15 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.betreuer.R;
+import com.example.betreuer.helper.IOHelper;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.viewpager.widget.PagerAdapter;
-
-import com.example.betreuer.helper.IOHelper;
-import com.example.betreuer.R;
 
 public class SliderAdapter extends PagerAdapter {
 

@@ -9,8 +9,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 
-import com.example.betreuer.helper.IOHelper;
 import com.example.betreuer.R;
+import com.example.betreuer.helper.IOHelper;
+import com.example.betreuer.helper.ShareHelper;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -45,5 +46,9 @@ public class MainActivity extends AppCompatActivity {
                         1001);
             }
         }
+    }
+
+    public void deleteMe(View view){
+        ShareHelper.shareTutorial(this,"yxxu");
     }
 }

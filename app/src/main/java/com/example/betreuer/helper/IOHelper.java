@@ -1,11 +1,10 @@
 package com.example.betreuer.helper;
 
+import android.content.ContentResolver;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Environment;
-import android.widget.EditText;
-import android.widget.ImageView;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -177,6 +176,26 @@ public class IOHelper {
             i++;
         }
         return images;
+    }
+
+    //  TODO: Delete this
+    public static List<String> getDescsFromFile(File file){
+        List<String> descs = new ArrayList<>();
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            String line;
+            System.out.println("hi");
+            while ((line = br.readLine()) != null) {
+//                String[] splits = line.split("§");
+//                String desc = splits[1].replace("\\n", System.getProperty("line.separator"));
+//                descs.add(desc);
+                System.out.println(line);
+            }
+            br.close();
+        }
+        catch (IOException e) {
+        }
+        return descs;
     }
 
     public static void deleteDirectory(String directory){
