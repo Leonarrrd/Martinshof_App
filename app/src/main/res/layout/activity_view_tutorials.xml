@@ -14,14 +14,15 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_centerHorizontal="false"
-        android:layout_marginTop="8dp"
+
+        android:background="#4D75C5"
         android:gravity="center"
         android:text="Tutorials"
-        android:textColor="#4D75C5"
+        android:textColor="#FFFFFF"
         android:textSize="36sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/line"
