@@ -13,15 +13,15 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
-import com.example.betreuer.R;
-import com.example.betreuer.helper.UIHelper;
 import com.example.betreuer.helper.IOHelper;
+import com.example.betreuer.R;
 
 public class ViewTutorialsActivity extends AppCompatActivity {
 
@@ -38,15 +38,15 @@ public class ViewTutorialsActivity extends AppCompatActivity {
         String[] titles = IOHelper.getTutorialNamesFromStorage().toArray(new String[IOHelper.getTutorialNamesFromStorage().size()]);
         adapter = new ListAdapter(this, titles, images);
         listView = findViewById(R.id.listview);
-        registerForContextMenu(listView);
+      //  registerForContextMenu(listView);
         listView.setAdapter(adapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        /*listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 openTutorial(view);
             }
         });
-        UIHelper.showErrorDialog(this,"LongClick auf Listenelemente für löschen/editieren.");
+        UIHelper.showErrorDialog(this,"LongClick auf Listenelemente für löschen/editieren."); */
     }
 
     @Override
@@ -62,6 +62,14 @@ public class ViewTutorialsActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+
+  /*  @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.tutorial_listview_menu, menu);
+        return true;
+    }*/
+
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v,
                                     ContextMenu.ContextMenuInfo menuInfo) {
@@ -69,7 +77,7 @@ public class ViewTutorialsActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.tutorial_listview_menu, menu);
     }
-
+/*
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
@@ -93,6 +101,9 @@ public class ViewTutorialsActivity extends AppCompatActivity {
                 return super.onContextItemSelected(item);
         }
     }
+*/
+
+    //ab hier neu!!
 
     class ListAdapter extends ArrayAdapter<String> {
         Context context;
@@ -110,13 +121,54 @@ public class ViewTutorialsActivity extends AppCompatActivity {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             LayoutInflater layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View row = layoutInflater.inflate(R.layout.row, parent, false);
+            final View row = layoutInflater.inflate(R.layout.row, parent, false);
             row.setTag(titles[position]);
             ImageView thumbnail = row.findViewById(R.id.imageView);
             TextView title = row.findViewById(R.id.textView1);
+            final Button edButton = row.findViewById(R.id.edButton);
             thumbnail.setImageBitmap(images[position]);
             title.setText(titles[position]);
+
+            title.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    openTutorial(row);
+                }
+            });
+       //     registerForContextMenu(edButton);
+           edButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    PopupMenu popup = new PopupMenu(context, edButton);
+                    popup.inflate(R.menu.tutorial_listview_menu);
+                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            switch (item.getItemId()) {
+                                case R.id.edit:
+                                    //handle menu1 click
+                                    break;
+                                case R.id.delete:
+                                    //handle menu2 click
+                                    break;
+                            }
+                            return false;
+                        }
+                    });
+                    //displaying the popup
+                    popup.show();
+                }
+            });
+
+           /*
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            View customLayout = getLayoutInflater().inflate(R.layout.menu_layout, null);
+            builder.setView(customLayout);
+
+            AlertDialog dialog = builder.create();
+            dialog.show();*/
             return row;
         }
+
     }
 }
