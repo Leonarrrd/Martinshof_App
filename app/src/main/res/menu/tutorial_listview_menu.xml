@@ -11,4 +11,8 @@
         android:icon="@android:drawable/ic_delete"
         android:title="Löschen"
       />
+    <item android:id="@+id/share"
+        android:icon="@android:drawable/ic_menu_share"
+        android:title="Teilen"
+        />
 </menu>

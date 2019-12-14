@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -25,6 +24,8 @@ import android.widget.TextView;
 import com.example.betreuer.R;
 import com.example.betreuer.helper.UIHelper;
 import com.example.betreuer.helper.IOHelper;
+import com.example.betreuer.model.Tutorial;
+import com.example.betreuer.service.ControllerService;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -35,10 +36,12 @@ import java.util.List;
 
 public class CreateTutorialActivity extends AppCompatActivity {
 
-    private String m_tutorialName = "";
+    public Tutorial tutorial; // see problem below
     private ListView listView;
     private int totalSteps = 0;
     private boolean created = false;
+    private ControllerService cs;
+
 
     // TODO: this is some hot garbage,
     // should use startActivityForResult() for this i guess
@@ -50,10 +53,14 @@ public class CreateTutorialActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tutorial_creation);
         listView = findViewById(R.id.listview);
+
+        cs = ControllerService.getInstance();
+
         if (getIntent().getStringExtra("tutorialName") == null){
             openStringInputDialog("Nicht zu lang, nicht zu kurz, darf nicht schon vorhanden sein");
         } else {
-            m_tutorialName = getIntent().getStringExtra("tutorialName");
+            tutorial = cs.getTutorial(getIntent().getStringExtra("tutorialName"));
+            tutorial.cacheImages();
             created = true;
         }
 
@@ -70,10 +77,11 @@ public class CreateTutorialActivity extends AppCompatActivity {
     @Override
     public void onResume(){
         super.onResume();
-        ((TextView)findViewById(R.id.title)).setText(m_tutorialName);
         if (created) {
-            String[] titles = getTitles();
-            Bitmap[] images = getImages();
+            ((TextView)findViewById(R.id.title)).setText(tutorial.getTitle());
+
+            String[] titles = tutorial.getSubheadings().toArray(new String[tutorial.getTotalSteps()]);
+            Bitmap[] images = tutorial.getThumbnails().toArray(new Bitmap[tutorial.getTotalSteps()]);
             MyAdapter adapter = new MyAdapter(this, titles, images);
             listView = findViewById(R.id.listview);
             listView.setAdapter(adapter);
@@ -83,12 +91,25 @@ public class CreateTutorialActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onPause(){
-        super.onPause();
-        // Potentially problematic since this deletes the directory when we open CreateNewStep
-        if (listView.getChildCount() < 1){
-            IOHelper.deleteDirectory(m_tutorialName);
-        }
+    public void onBackPressed() {
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case DialogInterface.BUTTON_POSITIVE:
+                        break;
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        finish();
+                        break;
+                }
+            }
+        };
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Die Änderungen werden nicht gespeichert. " +
+                "Klicke auf \"Fertig\" wenn du die Änderungen speichern möchtest")
+                .setPositiveButton("Weiter bearbeiten", dialogClickListener)
+                .setNegativeButton("Zum Hauptmenü", dialogClickListener)
+                .show();
     }
 
     private void openStringInputDialog(String message){
@@ -111,7 +132,7 @@ public class CreateTutorialActivity extends AppCompatActivity {
                 String s = editText.getText().toString();
                 boolean tooLong = s.length() > 15;
                 boolean tooShort = s.length() < 2;
-                boolean alreadyExists = IOHelper.getTutorialNamesFromStorage().contains(s);
+                boolean alreadyExists = ControllerService.getInstance().getTitles().contains(s);
                 if (tooLong){
                     dialog.cancel();
                     openStringInputDialog("Fehler: Name ist zu lang.");
@@ -122,9 +143,10 @@ public class CreateTutorialActivity extends AppCompatActivity {
                     dialog.cancel();
                     openStringInputDialog("Fehler: Name existiert bereits.");
                 } else {
-                    m_tutorialName = editText.getText().toString();
-                    ((TextView)findViewById(R.id.title)).setText(m_tutorialName);
-                    createSubDirectory();
+                    String tutorialName = editText.getText().toString();
+                    ((TextView)findViewById(R.id.title)).setText(tutorialName);
+//                    createSubDirectory();
+                    tutorial = new Tutorial(tutorialName);
                 }
             }
         });
@@ -142,7 +164,7 @@ public class CreateTutorialActivity extends AppCompatActivity {
 
     public void openCreateStepActivity(View view){
         Intent intent = new Intent(this, CreateNewStepActivity.class);
-        intent.putExtra("title", m_tutorialName);
+        intent.putExtra("title", tutorial.getTitle());
         intent.putExtra("stepNr", ctx.getTotalSteps()+1);
         intent.putExtra("new", true);
         startActivity(intent);
@@ -151,44 +173,10 @@ public class CreateTutorialActivity extends AppCompatActivity {
     public void openEditStepActivity(View view){
         int step = (Integer) view.getTag();
         Intent intent = new Intent(this, CreateNewStepActivity.class);
-        intent.putExtra("title", m_tutorialName);
+        intent.putExtra("title", tutorial.getTitle());
         intent.putExtra("stepNr", step);
         intent.putExtra("new", false);
         startActivity(intent);
-    }
-
-    public void createSubDirectory(){
-        File directory = new File(Environment.getExternalStorageDirectory() + "/Martinshof" , m_tutorialName);
-        IOHelper.createSubDirectory(directory);
-        System.out.println("created");
-    }
-
-    public String[] getTitles() {
-        List<String> titleList = new ArrayList<>();
-        File sdcard = Environment.getExternalStorageDirectory();
-        File descs = new File(sdcard + "/Martinshof/" + m_tutorialName, "descs.txt");
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(descs));
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] splits = line.split("§");
-                titleList.add(splits[0]);
-            }
-            br.close();
-        }
-        catch (IOException e) {
-        }
-
-        String[] titleArray = titleList.toArray(new String[titleList.size()]);
-
-        return titleArray;
-    }
-
-    // TODO: probably want to get rid of this
-    private Bitmap[] getImages() {
-        List<Bitmap> imageList = IOHelper.getImagesFromDirectory(m_tutorialName);
-        Bitmap[] imageArray = imageList.toArray(new Bitmap[imageList.size()]);
-        return imageArray;
     }
 
     public int getTotalSteps() {
@@ -200,8 +188,9 @@ public class CreateTutorialActivity extends AppCompatActivity {
     }
 
     public void finish(View view){
-        if (listView.getChildCount() < 1){
-            IOHelper.deleteDirectory(m_tutorialName);
+        if (listView.getChildCount() > 0) {
+            IOHelper.writeTutorialToStorage(tutorial);
+            cs.update();
         }
         finish();
     }
@@ -212,9 +201,8 @@ public class CreateTutorialActivity extends AppCompatActivity {
             return;
         }
         Intent intent = new Intent(this, ViewTutorialActivity.class);
-        String tagString = (String) view.getTag();
-        intent.putExtra("tutorial", m_tutorialName);
-        intent.putExtra("title", m_tutorialName);
+        intent.putExtra("tutorial", tutorial.getTitle());
+        intent.putExtra("title", tutorial.getTitle());
         startActivity(intent);
     }
 

@@ -9,7 +9,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.betreuer.R;
-import com.example.betreuer.helper.IOHelper;
+import com.example.betreuer.model.Tutorial;
+import com.example.betreuer.service.ControllerService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +21,7 @@ import androidx.viewpager.widget.PagerAdapter;
 
 public class SliderAdapter extends PagerAdapter {
 
-    private String tutorialName;
+    private Tutorial tutorial;
     private int pages;
     private List<String> slide_subHeadings = new ArrayList<>();
     private List<String> slide_descs = new ArrayList<>();
@@ -30,15 +31,15 @@ public class SliderAdapter extends PagerAdapter {
 
     public SliderAdapter(Context context, String tutorialName){
         this.context = context;
-        this.tutorialName = tutorialName;
+        this.tutorial = ControllerService.getInstance().getTutorial(tutorialName);
         init();
     }
 
     private void init(){
-        slide_subHeadings = IOHelper.getSubheadingsFromDirectory(tutorialName);
-        slide_descs = IOHelper.getDescsFromDirectory(tutorialName);
-        slide_images = IOHelper.getImagesFromDirectory(tutorialName);
-        pages = slide_subHeadings.size();
+        slide_subHeadings = tutorial.getSubheadings();
+        slide_descs = tutorial.getDescriptions();
+        slide_images = tutorial.getImages();
+        pages = tutorial.getTotalSteps();
     }
 
     @Override

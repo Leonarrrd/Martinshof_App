@@ -3,6 +3,7 @@ package com.example.betreuer.activity;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -20,23 +21,26 @@ import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
-import com.example.betreuer.helper.IOHelper;
 import com.example.betreuer.R;
+import com.example.betreuer.helper.ShareHelper;
+import com.example.betreuer.service.ControllerService;
 
 public class ViewTutorialsActivity extends AppCompatActivity {
 
     private ListView listView;
     private ListAdapter adapter;
+    private ControllerService cs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         listView = findViewById(R.id.listview);
         setContentView(R.layout.activity_view_tutorials);
-        // TODO: Ask Leo about what's wrong with doing this in onCreate()
-        Bitmap[] images = IOHelper.getFirstImageOfEachTutorial();
-        String[] titles = IOHelper.getTutorialNamesFromStorage().toArray(new String[IOHelper.getTutorialNamesFromStorage().size()]);
-        adapter = new ListAdapter(this, titles, images);
+        cs = ControllerService.getInstance();
+
+        String[] titles = cs.getTitles().toArray(new String[cs.getTitles().size()]);
+        Bitmap[] thumbnails = cs.getThumbnails().toArray(new Bitmap[cs.getThumbnails().size()]);
+        adapter = new ListAdapter(this, titles, thumbnails);
         listView = findViewById(R.id.listview);
       //  registerForContextMenu(listView);
         listView.setAdapter(adapter);
@@ -52,6 +56,11 @@ public class ViewTutorialsActivity extends AppCompatActivity {
     @Override
     public void onResume(){
         super.onResume();
+    }
+
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(this, MainActivity.class));
     }
 
     private void openTutorial(View view){
@@ -108,25 +117,25 @@ public class ViewTutorialsActivity extends AppCompatActivity {
     class ListAdapter extends ArrayAdapter<String> {
         Context context;
         String[] titles;
-        Bitmap[] images;
+        Bitmap[] thumbnails;
 
         ListAdapter(Context c, String[] titles, Bitmap[] images) {
             super(c, R.layout.row, R.id.textView1, titles);
             this.context = c;
             this.titles = titles;
-            this.images = images;
+            this.thumbnails = images;
         }
 
         @NonNull
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent) {
             LayoutInflater layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             final View row = layoutInflater.inflate(R.layout.row, parent, false);
             row.setTag(titles[position]);
             ImageView thumbnail = row.findViewById(R.id.imageView);
-            TextView title = row.findViewById(R.id.textView1);
+            final TextView title = row.findViewById(R.id.textView1);
             final Button edButton = row.findViewById(R.id.edButton);
-            thumbnail.setImageBitmap(images[position]);
+            thumbnail.setImageBitmap(thumbnails[position]);
             title.setText(titles[position]);
 
             title.setOnClickListener(new View.OnClickListener() {
@@ -135,7 +144,6 @@ public class ViewTutorialsActivity extends AppCompatActivity {
                     openTutorial(row);
                 }
             });
-       //     registerForContextMenu(edButton);
            edButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -146,10 +154,19 @@ public class ViewTutorialsActivity extends AppCompatActivity {
                         public boolean onMenuItemClick(MenuItem item) {
                             switch (item.getItemId()) {
                                 case R.id.edit:
-                                    //handle menu1 click
+                                    Intent intent = new Intent(context, CreateTutorialActivity.class);
+                                    intent.putExtra("tutorialName", titles[position]);
+                                    startActivity(intent);
                                     break;
                                 case R.id.delete:
-                                    //handle menu2 click
+                                    cs.deleteTutorial(titles[position]);
+                                    // TODO: this doesn't work:
+                                    // adapter.notifyDataSetChanged();
+                                    // TODO: and this is the shitty workaround for it
+                                    ((Activity)context).recreate();
+                                    break;
+                                case R.id.share:
+                                    ShareHelper.shareTutorial(getContext(), titles[position]);
                                     break;
                             }
                             return false;

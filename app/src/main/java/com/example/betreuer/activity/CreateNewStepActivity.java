@@ -21,17 +21,18 @@ import android.widget.TextView;
 import com.example.betreuer.R;
 import com.example.betreuer.helper.IOHelper;
 import com.example.betreuer.helper.UIHelper;
+import com.example.betreuer.model.Step;
+import com.example.betreuer.model.Tutorial;
 
 import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 public class CreateNewStepActivity extends AppCompatActivity {
     private int stepNr;
     private boolean isNew;
-    private String title;
+    private Tutorial tutorial;
 
     // EXPERIMENTAL
     String mCameraFileName = Environment.getExternalStorageDirectory() + "/Martinshof";
@@ -41,22 +42,23 @@ public class CreateNewStepActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_new_step);
-        title = getIntent().getStringExtra("title");
-        ((TextView)findViewById(R.id.title)).setText(title);
-        stepNr = getIntent().getIntExtra("stepNr", 50);
+        tutorial = CreateTutorialActivity.ctx.tutorial; // TODO: see explanation in CreateTutorialActivity
+
+        ((TextView)findViewById(R.id.title)).setText(tutorial.getTitle());
+
+        stepNr = getIntent().getIntExtra("stepNr", -99);
+        if (stepNr == -99){
+            UIHelper.showErrorDialog(this, "Hoppla, da ist wohl was schiefgelaufen");
+            finish();
+        }
+
         isNew = getIntent().getBooleanExtra("new", true);
         if(!isNew){
-            List<String> subheader = IOHelper.getSubheadingsFromDirectory(title);
-            List<String> desc = IOHelper.getDescsFromDirectory(title);
-            List<Bitmap> imgs = IOHelper.getImagesFromDirectory(title);
-            ((EditText)findViewById(R.id.slide_subheader)).setText(subheader.get(stepNr));
-            ((EditText)findViewById(R.id.slide_desc)).setText(desc.get(stepNr));
-
-            ImageView img = findViewById(R.id.image_view);
-            img.setImageBitmap(imgs.get(stepNr));
-
-            //stepNr greift vorher auf den Index zu, muss also jetzt um 1 erhöht werden
-            stepNr++;
+            // TODO: Weg damit!
+            Step step = tutorial.getSteps().get(stepNr);
+            ((EditText)findViewById(R.id.slide_subheader)).setText(step.getSubheading());
+            ((EditText)findViewById(R.id.slide_desc)).setText(step.getDescription());
+            ((ImageView)findViewById(R.id.image_view)).setImageBitmap(step.getImage());
         }
 
     }
@@ -69,17 +71,22 @@ public class CreateNewStepActivity extends AppCompatActivity {
   //  }
 
     public void finish(View view){
+        // TODO: try to delete?
         Environment.getExternalStorageState();
         if(((EditText) findViewById(R.id.slide_subheader)).getText().toString().isEmpty()
         || ((EditText) findViewById(R.id.slide_desc)).getText().toString().isEmpty()){
-            System.out.println("hm");
             UIHelper.showErrorDialog(this, "Bitte gebe eine Überschrift und eine Erklärung ein.");
             return;
         }
         // TODO: wipe this out
         CreateTutorialActivity.ctx.increaseTotalSteps();
-        writeTextToStorage();
-        writeImageToStorage();
+
+        String subheader = ((EditText) findViewById(R.id.slide_subheader)).getText().toString();
+        String desc = ((EditText) findViewById(R.id.slide_desc)).getText().toString();
+        ImageView iv = findViewById(R.id.image_view);
+        BitmapDrawable drawable = (BitmapDrawable) iv.getDrawable();
+        Bitmap bitmapImg = drawable.getBitmap();
+        tutorial.addStep(new Step(subheader, desc, bitmapImg));
         finish();
     }
 
@@ -148,33 +155,8 @@ public class CreateNewStepActivity extends AppCompatActivity {
         File outFile = new File(outPath);
 
         mCameraFileName = outFile.toString();
-        Uri outuri = Uri.fromFile(outFile);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, outuri);
+        Uri outUri = Uri.fromFile(outFile);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, outUri);
         return intent;
-    }
-
-    protected void writeTextToStorage() {
-        File directory = new File(Environment.getExternalStorageDirectory() + "/Martinshof", getIntent().getStringExtra("title"));
-        String subheader = ((EditText) findViewById(R.id.slide_subheader)).getText().toString();
-        String desc = ((EditText) findViewById(R.id.slide_desc)).getText().toString();
-        if (isNew) {
-            IOHelper.writeTextToStorage(directory, subheader, desc);
-        } else {
-            IOHelper.writeTextToStorage(directory, subheader, desc, stepNr);
-        }
-    }
-
-    protected void writeImageToStorage(){
-        String dir = getIntent().getStringExtra("title");
-        ImageView iv = findViewById(R.id.image_view);
-        BitmapDrawable drawable = (BitmapDrawable) iv.getDrawable();
-        Bitmap bitmapImg = drawable.getBitmap();
-        int step;
-        if (!isNew){
-            step = stepNr;
-        } else {
-            step = IOHelper.getSubheadingsFromDirectory(dir).size();
-        }
-        IOHelper.writeImageToStorage(dir, step, bitmapImg);
     }
 }

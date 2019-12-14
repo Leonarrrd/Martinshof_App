@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.betreuer">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
+
+
     <application
+        android:name="com.example.betreuer.helper.GlobalContext"
         android:allowBackup="true"
         android:icon="@mipmap/logo"
         android:label="@string/app_name"
@@ -22,6 +26,17 @@
                     android:mimeType="*/*"
                     android:pathPattern=".*\\.tut"
                     android:scheme="file" />
+            </intent-filter>
+            <intent-filter
+                android:icon="@mipmap/ic_launcher"
+                android:label="@string/app_name"
+                tools:ignore="AppLinkUrlError"
+                android:scheme="http">
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.EDIT" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="*/*" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
