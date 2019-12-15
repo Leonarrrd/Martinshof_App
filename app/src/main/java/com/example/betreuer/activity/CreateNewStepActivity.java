@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.StrictMode;
 import android.provider.MediaStore;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -35,7 +36,6 @@ public class CreateNewStepActivity extends AppCompatActivity {
     private int stepNr;
     private boolean isNew;
     private Tutorial tutorial;
-    private String title;
     private EditText subheader;
     private EditText description;
 
@@ -49,6 +49,18 @@ public class CreateNewStepActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_new_step);
         tutorial = CreateTutorialActivity.ctx.tutorial; // TODO: see explanation in CreateTutorialActivity
         subheader = (EditText) findViewById(R.id.slide_subheader);
+
+
+        //hides the keyboard when clicking outside edittext
+        findViewById(R.id.relativeLayout).setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+                return true;
+            }
+        });
+
         subheader.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -64,6 +76,8 @@ public class CreateNewStepActivity extends AppCompatActivity {
                 imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
             }
         });
+
+
         ((TextView)findViewById(R.id.title)).setText(tutorial.getTitle());
 
         stepNr = getIntent().getIntExtra("stepNr", -99);
@@ -81,6 +95,7 @@ public class CreateNewStepActivity extends AppCompatActivity {
             ((ImageView)findViewById(R.id.image_view)).setImageBitmap(step.getImage());
         }
     }
+
 
     public void finish(View view){
         // TODO: try to delete?

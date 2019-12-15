@@ -3,6 +3,7 @@ package com.example.betreuer.activity;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -11,17 +12,24 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.InputType;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.example.betreuer.R;
+import com.example.betreuer.helper.ShareHelper;
 import com.example.betreuer.helper.UIHelper;
 import com.example.betreuer.helper.IOHelper;
 import com.example.betreuer.model.Tutorial;
@@ -41,6 +49,7 @@ public class CreateTutorialActivity extends AppCompatActivity {
     private int totalSteps = 0;
     private boolean created = false;
     private ControllerService cs;
+    private ListAdapter adapter;
 
 
     // TODO: this is some hot garbage,
@@ -63,13 +72,13 @@ public class CreateTutorialActivity extends AppCompatActivity {
             tutorial.cacheImages();
             created = true;
         }
-
+/*
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 openEditStepActivity(view);
             }
-        });
+        });*/
 
         ctx = this;
     }
@@ -82,7 +91,7 @@ public class CreateTutorialActivity extends AppCompatActivity {
 
             String[] titles = tutorial.getSubheadings().toArray(new String[tutorial.getTotalSteps()]);
             Bitmap[] images = tutorial.getThumbnails().toArray(new Bitmap[tutorial.getTotalSteps()]);
-            MyAdapter adapter = new MyAdapter(this, titles, images);
+            adapter = new ListAdapter(this, titles, images);
             listView = findViewById(R.id.listview);
             listView.setAdapter(adapter);
         } else {
@@ -206,12 +215,12 @@ public class CreateTutorialActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    class MyAdapter extends ArrayAdapter<String> {
+    class ListAdapter extends ArrayAdapter<String> {
         Context context;
         String[] titles;
         Bitmap[] images;
 
-        MyAdapter(Context c, String[] titles, Bitmap[] images) {
+        ListAdapter(Context c, String[] titles, Bitmap[] images) {
             super(c, R.layout.row, R.id.textView1, titles);
             this.context = c;
             this.titles = titles;
@@ -222,12 +231,48 @@ public class CreateTutorialActivity extends AppCompatActivity {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             LayoutInflater layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View row = layoutInflater.inflate(R.layout.row, parent, false);
+            final View row = layoutInflater.inflate(R.layout.row, parent, false);
             row.setTag(position);
             ImageView myImage = row.findViewById(R.id.imageView);
-            TextView myTitle = row.findViewById(R.id.textView1);
+            final TextView myTitle = row.findViewById(R.id.textView1);
+            final Button edButton = row.findViewById(R.id.edButton);
             myImage.setImageBitmap(images[position]);
             myTitle.setText(titles[position]);
+
+            edButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    PopupMenu popup = new PopupMenu(context, edButton);
+                    popup.inflate(R.menu.tutorial_listview_menu);
+                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            switch (item.getItemId()) {
+                                case R.id.edit:
+                                    openEditStepActivity(row);
+                                    //Intent intent = new Intent(context, CreateTutorialActivity.class);
+                                  //  intent.putExtra("tutorialName", titles[position]);
+                                   // startActivity(intent);
+                                    break;
+                                case R.id.delete:
+                                   // cs.deleteTutorial(titles[position]);
+                                    // TODO: this doesn't work:
+                                    // adapter.notifyDataSetChanged();
+                                    // TODO: and this is the shitty workaround for it
+                                    ((Activity)context).recreate();
+                                    break;
+                                case R.id.share:
+                                 //   ShareHelper.shareTutorial(getContext(), titles[position]);
+                                    break;
+                            }
+                            return false;
+                        }
+                    });
+                    //displaying the popup
+                    popup.show();
+                }
+            });
+
             return row;
         }
     }

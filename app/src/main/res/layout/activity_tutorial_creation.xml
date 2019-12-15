@@ -51,14 +51,12 @@
     <ListView
         android:id="@+id/listview"
         android:layout_width="417dp"
-        android:layout_height="460dp"
-        android:layout_marginTop="16dp"
+        android:layout_height="485dp"
         android:fadeScrollbars="false"
         android:scrollbarSize="15dip"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/title">
-
     </ListView>
 
     <Button

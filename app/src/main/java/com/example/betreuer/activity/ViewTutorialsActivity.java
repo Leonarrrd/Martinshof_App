@@ -71,14 +71,6 @@ public class ViewTutorialsActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-
-  /*  @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.tutorial_listview_menu, menu);
-        return true;
-    }*/
-
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v,
                                     ContextMenu.ContextMenuInfo menuInfo) {
@@ -112,8 +104,6 @@ public class ViewTutorialsActivity extends AppCompatActivity {
     }
 */
 
-    //ab hier neu!!
-
     class ListAdapter extends ArrayAdapter<String> {
         Context context;
         String[] titles;
@@ -144,7 +134,7 @@ public class ViewTutorialsActivity extends AppCompatActivity {
                     openTutorial(row);
                 }
             });
-           edButton.setOnClickListener(new View.OnClickListener() {
+            edButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     PopupMenu popup = new PopupMenu(context, edButton);
@@ -176,14 +166,6 @@ public class ViewTutorialsActivity extends AppCompatActivity {
                     popup.show();
                 }
             });
-
-           /*
-            AlertDialog.Builder builder = new AlertDialog.Builder(context);
-            View customLayout = getLayoutInflater().inflate(R.layout.menu_layout, null);
-            builder.setView(customLayout);
-
-            AlertDialog dialog = builder.create();
-            dialog.show();*/
             return row;
         }
 
