@@ -11,7 +11,7 @@ import android.view.View;
 
 import com.example.betreuer.R;
 import com.example.betreuer.helper.IOHelper;
-import com.example.betreuer.helper.ShareHelper;
+import com.example.betreuer.service.ControllerService;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -21,6 +21,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         checkFilePermissions();
         IOHelper.createDirectory();
+        ControllerService cs = ControllerService.getInstance();
+        System.out.println(cs.getTutorials());
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+        System.exit(0);
     }
 
     public void openCategory(View view){
@@ -46,9 +54,5 @@ public class MainActivity extends AppCompatActivity {
                         1001);
             }
         }
-    }
-
-    public void deleteMe(View view){
-        ShareHelper.shareTutorial(this,"yxxu");
     }
 }

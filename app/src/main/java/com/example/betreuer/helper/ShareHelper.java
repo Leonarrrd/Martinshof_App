@@ -5,9 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
+import android.widget.Toast;
 
 import com.example.betreuer.BuildConfig;
 
+import org.zeroturnaround.zip.NameMapper;
 import org.zeroturnaround.zip.ZipUtil;
 
 import java.io.File;
@@ -42,11 +44,11 @@ public class ShareHelper {
         ctx.startActivity(intent);
     }
 
-    public static void zipDirectory(String directory) {
-        ZipUtil.pack(new File(app_root, directory), new File(app_root, directory + ".tut"));
-    }
-
-    public static void unpack(File zip){
-        ZipUtil.unpack(zip, new File(app_root, "receivedTutorial"));
+    public static void zipDirectory(final String directory) {
+        ZipUtil.pack(new File(app_root, directory), new File(app_root, directory + ".tut"),new NameMapper() {
+            public String map(String name) {
+                return directory + "/" + name;
+            }
+        });
     }
 }

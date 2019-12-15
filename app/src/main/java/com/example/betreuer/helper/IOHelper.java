@@ -1,10 +1,14 @@
 package com.example.betreuer.helper;
 
-import android.content.ContentResolver;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
+
 import android.os.Environment;
+
+
+import com.example.betreuer.R;
+import com.example.betreuer.model.Step;
+import com.example.betreuer.model.Tutorial;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -41,17 +45,6 @@ public class IOHelper {
         return Arrays.asList(directories);
     }
 
-    public static Bitmap[] getFirstImageOfEachTutorial() {
-        List<Bitmap> imageList = new ArrayList<>();
-        for (String dir : getTutorialNamesFromStorage()){
-            String pathToImage = sdcard + "/Martinshof/" + dir + "/step1.jpg";
-            Bitmap image = BitmapFactory.decodeFile(pathToImage);
-            imageList.add(image);
-        }
-        Bitmap[] imageArray = imageList.toArray(new Bitmap[imageList.size()]);
-        return imageArray;
-    }
-
     public static void writeTextToStorage(File directory, String subheader, String desc){
         try {
             if (!directory.exists()){
@@ -72,42 +65,10 @@ public class IOHelper {
         }
     }
 
-    public static void writeTextToStorage(File directory, String subheader, String desc, int stepNumber){
-        try {
-            File file = new File(directory, "descs.txt");
-            BufferedReader br = new BufferedReader(new FileReader(file));
-            String line;
-            StringBuilder sb = new StringBuilder();
-            int i = 0;
-            while ((line = br.readLine()) != null) {
-                if(i!=stepNumber-1){
-                    sb.append(line);
-                } else {
-                    sb.append(subheader);
-                    sb.append("§");
-                    sb.append(desc);
-                }
-                sb.append("\n");
-                i++;
-            }
-            br.close();
-            System.out.println(sb.toString());
-            FileWriter writer = new FileWriter(file,false);
-            writer.write(sb.toString());
-            writer.flush();
-            writer.close();
-        }
-        catch(IOException e)
-        {
-            e.printStackTrace();
-        }
-    }
-
-    public static void writeImageToStorage(String directory, int step,  Bitmap bitmap){
-        File root = new File(app_root, directory);
+    public static void writeImageToStorage(File directory, int step,  Bitmap bitmap){
         String fileName = String.format("step" + step + ".jpg", System.currentTimeMillis());
         FileOutputStream outStream = null;
-        File outFile = new File(root, fileName);
+        File outFile = new File(directory, fileName);
         try {
             outStream = new FileOutputStream(outFile);
             bitmap.compress(Bitmap.CompressFormat.JPEG, 20, outStream);
@@ -118,96 +79,67 @@ public class IOHelper {
         }
     }
 
-    public static void createSubDirectory(File directory){
-        if (!directory.exists()){
-            directory.mkdirs();
-        }
-    }
-
-    public static List<String> getSubheadingsFromDirectory(String directory){
-        List<String> subHeadings = new ArrayList<>();
-        try {
-            File root = new File(app_root, directory);
-            BufferedReader br = new BufferedReader(new FileReader(root + "/descs.txt"));
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] splits = line.split("§");
-                subHeadings.add(splits[0]);
-            }
-            br.close();
-        }
-        catch (IOException e) {
-        }
-        return subHeadings;
-    }
-
-    public static List<String> getDescsFromDirectory(String directory){
-        List<String> descs = new ArrayList<>();
-        try {
-            File root = new File(app_root, directory);
-            BufferedReader br = new BufferedReader(new FileReader(root + "/descs.txt"));
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] splits = line.split("§");
-                String desc = splits[1].replace("\\n", System.getProperty("line.separator"));
-                descs.add(desc);
-            }
-            br.close();
-        }
-        catch (IOException e) {
-        }
-        return descs;
-    }
-
-    public static List<Bitmap> getImagesFromDirectory(String directory){
-        File root = new File(app_root, directory);
-
-        List<Bitmap> images = new ArrayList<>();
-
-        int i = 1;
-        while (true){
-            String pathToImage = root + "/step" + i + ".jpg";
-            if ((new File (pathToImage)).exists()) {
-                Bitmap bitmap = BitmapFactory.decodeFile(pathToImage);
-                images.add(bitmap);
-            } else {
-                break;
-            }
-            i++;
-        }
-        return images;
-    }
-
-    //  TODO: Delete this
-    public static List<String> getDescsFromFile(File file){
-        List<String> descs = new ArrayList<>();
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(file));
-            String line;
-            System.out.println("hi");
-            while ((line = br.readLine()) != null) {
-//                String[] splits = line.split("§");
-//                String desc = splits[1].replace("\\n", System.getProperty("line.separator"));
-//                descs.add(desc);
-                System.out.println(line);
-            }
-            br.close();
-        }
-        catch (IOException e) {
-        }
-        return descs;
-    }
-
-    public static void deleteDirectory(String directory){
-        Environment.getExternalStorageState();
-        File root = new File(app_root + "/" + directory);
-        deleteRecursive(root);
-    }
-
-    private static void deleteRecursive(File root) {
+    public static void deleteRecursive(File root) {
         if (root.isDirectory())
             for (File child : root.listFiles())
                 deleteRecursive(child);
         root.delete();
+    }
+
+    public static void deleteTutorial(String tutorialTitle){
+        deleteRecursive(new File(app_root, tutorialTitle));
+    }
+
+    public static List<Tutorial> getTutorials() {
+        List<Tutorial> tuts = new ArrayList<>();
+        for (String title : getTutorialNamesFromStorage()){
+            Tutorial tut = new Tutorial(title);
+            try {
+                File root = new File(app_root, title);
+                BufferedReader br = new BufferedReader(new FileReader(root + "/descs.txt"));
+                int i = 1;
+                String line;
+                while ((line = br.readLine()) != null) {
+                    String[] splits = line.split("§");
+                    String subheading = splits[0];
+                    String desc = splits[1].replace("\\n", System.getProperty("line.separator"));
+                    String pathToImage = root + "/step" + i + ".jpg";
+                    tut.addStep(new Step(subheading, desc, pathToImage));
+                    i++;
+                }
+                br.close();
+            }
+            catch (IOException e) {
+                // UIHelper.reset();
+            }
+            // don't add tutorial if descs.txt wasn't found or if descs.txt is empty
+            if (tut.getTotalSteps()>0) {
+                tuts.add(tut);
+            }
+        }
+        return tuts;
+    }
+
+    public static Bitmap getImageFromPath(String pathToImage) {
+        File f = new File (pathToImage);
+        if (f.exists()) {
+            return BitmapFactory.decodeFile(pathToImage);
+        } else {
+            return BitmapFactory.decodeResource(GlobalContext.getAppContext().getResources(),R.drawable.image_not_found);
+        }
+    }
+
+    public static void writeTutorialToStorage(Tutorial tutorial) {
+        File directory = new File(app_root, tutorial.getTitle());
+        if (directory.exists()) {
+            deleteRecursive(directory);
+        }
+        directory.mkdirs();
+        int i = 1;
+        for (Step step : tutorial.getSteps()){
+            writeTextToStorage(directory, step.getSubheading(), step.getDescription());
+            writeImageToStorage(directory, i, step.getImage());
+            i++;
+        }
     }
 }
