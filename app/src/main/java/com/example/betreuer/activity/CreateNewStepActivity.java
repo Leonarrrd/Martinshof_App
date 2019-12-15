@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -14,6 +15,7 @@ import android.os.Environment;
 import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -32,6 +34,8 @@ public class CreateNewStepActivity extends AppCompatActivity {
     private int stepNr;
     private boolean isNew;
     private String title;
+    private EditText subheader;
+    private EditText description;
 
     // EXPERIMENTAL
     String mCameraFileName = Environment.getExternalStorageDirectory() + "/Martinshof";
@@ -42,6 +46,22 @@ public class CreateNewStepActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_new_step);
         title = getIntent().getStringExtra("title");
+        subheader = (EditText) findViewById(R.id.slide_subheader);
+        subheader.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+            }
+        });
+        description = (EditText) findViewById(R.id.slide_desc);
+        description.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+            }
+        });
         ((TextView)findViewById(R.id.title)).setText(title);
         stepNr = getIntent().getIntExtra("stepNr", 50);
         isNew = getIntent().getBooleanExtra("new", true);
@@ -58,15 +78,7 @@ public class CreateNewStepActivity extends AppCompatActivity {
             //stepNr greift vorher auf den Index zu, muss also jetzt um 1 erhöht werden
             stepNr++;
         }
-
     }
-
-    //wird benutzt, um Tastatur wieder zu verbergen, noch nicht implementiert
- //    public void hideSoftKeyboard()
- //   {
-  //      InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
-  //      inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-  //  }
 
     public void finish(View view){
         Environment.getExternalStorageState();

@@ -9,20 +9,21 @@
     <TextView
         android:id="@+id/title"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="70dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_centerHorizontal="false"
+        android:background="@color/header"
         android:gravity="center"
         android:text="Herzlich Willkommen!"
         android:textColor="#FFFFFF"
-        android:background="#4D75C5"
         android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
+    <!--
     <TextView
         android:id="@+id/line"
         style="?android:attr/listSeparatorTextViewStyle"
@@ -32,46 +33,51 @@
         android:gravity="center_horizontal"
         android:paddingTop="5dip"
         app:layout_constraintTop_toBottomOf="@+id/title" />
+-->
+
 
     <Button
         android:id="@+id/view_tutorials_btn"
         style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="200dp"
-        android:layout_height="150dp"
-        android:backgroundTint="#4D75C5"
+        android:layout_width="0dp"
+        android:layout_height="365dp"
+        android:background="@drawable/hintergrund_telegram"
+        android:fontFamily="sans-serif-smallcaps"
+        android:lineSpacingExtra="8sp"
         android:onClick="openCategory"
         android:tag="view_tutorials_btn"
-        android:text="Tutorials ansehen"
-        app:layout_constraintBottom_toTopOf="@+id/create_new_tutorial_btn"
+        android:text="Tutorials \nansehen"
+        android:textColor="#000000"
+        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.500"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/title" />
+
+    <TextView
+        android:id="@+id/line"
+        style="?android:attr/listSeparatorTextViewStyle"
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:background="#000"
+        android:gravity="center_horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/title" />
+
 
     <Button
         android:id="@+id/create_new_tutorial_btn"
         style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="200dp"
-        android:layout_height="150dp"
-        android:backgroundTint="#4D75C5"
+        android:layout_width="411dp"
+        android:layout_height="365dp"
+        android:background="@drawable/hintergrund_2"
+        android:lineSpacingExtra="8sp"
         android:onClick="openCategory"
         android:tag="create_new_tutorial_btn"
-        android:text="Tutorial erstelllen"
+        android:text="Tutorial \nerstellen"
+        android:textColor="#000000"
+        android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.500"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view_tutorials_btn" />
-
-    <Button
-        android:id="@+id/button6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="deleteMe"
-        android:text="share"
-        app:layout_constraintBottom_toTopOf="@+id/create_new_tutorial_btn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view_tutorials_btn" />
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
