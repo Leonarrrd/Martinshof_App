@@ -37,25 +37,17 @@ public class ViewTutorialsActivity extends AppCompatActivity {
         listView = findViewById(R.id.listview);
         setContentView(R.layout.activity_view_tutorials);
         cs = ControllerService.getInstance();
-
-        String[] titles = cs.getTitles().toArray(new String[cs.getTitles().size()]);
-        Bitmap[] thumbnails = cs.getThumbnails().toArray(new Bitmap[cs.getThumbnails().size()]);
-        adapter = new ListAdapter(this, titles, thumbnails);
-        listView = findViewById(R.id.listview);
-      //  registerForContextMenu(listView);
-        listView.setAdapter(adapter);
-        /*listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                openTutorial(view);
-            }
-        });
-        UIHelper.showErrorDialog(this,"LongClick auf Listenelemente für löschen/editieren."); */
     }
 
     @Override
     public void onResume(){
         super.onResume();
+        String[] titles = cs.getTitles().toArray(new String[cs.getTitles().size()]);
+        Bitmap[] thumbnails = cs.getThumbnails().toArray(new Bitmap[cs.getThumbnails().size()]);
+        adapter = new ListAdapter(this, titles, thumbnails);
+        listView = findViewById(R.id.listview);
+        registerForContextMenu(listView);
+        listView.setAdapter(adapter);
     }
 
     @Override
@@ -76,7 +68,7 @@ public class ViewTutorialsActivity extends AppCompatActivity {
                                     ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.tutorial_listview_menu, menu);
+        inflater.inflate(R.menu.tutorials_listview_menu, menu);
     }
 /*
 
@@ -138,7 +130,7 @@ public class ViewTutorialsActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     PopupMenu popup = new PopupMenu(context, edButton);
-                    popup.inflate(R.menu.tutorial_listview_menu);
+                    popup.inflate(R.menu.tutorials_listview_menu);
                     popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                         @Override
                         public boolean onMenuItemClick(MenuItem item) {

@@ -2,6 +2,7 @@ package com.example.betreuer.model;
 
 import android.graphics.Bitmap;
 
+import com.example.betreuer.helper.FormatHelper;
 import com.example.betreuer.helper.IOHelper;
 
 import java.util.ArrayList;
@@ -33,6 +34,10 @@ public class Tutorial {
 
     public void addStep(Step step){
         steps.add(step);
+    }
+
+    public void changeStep(Step step, int stepNr){
+        steps.set(stepNr, step);
     }
 
     public void removeStep(Step step){
@@ -71,7 +76,7 @@ public class Tutorial {
         List<Bitmap> bitmaps = getImages();
         List<Bitmap> thumbnails = new ArrayList<>();
         for (Bitmap bm : bitmaps){
-            thumbnails.add(Bitmap.createScaledBitmap(bm, 100, 100, true));
+            thumbnails.add(FormatHelper.getThumbnail(bm));
         }
         return thumbnails;
     }
@@ -87,5 +92,10 @@ public class Tutorial {
                 step.setImage(IOHelper.getImageFromPath(step.getPathToImage()));
             }
         }
+    }
+
+    public void rearrangeStep(int currentStepNr, int newStepNumber) {
+        Step stepToRearrange =  steps.remove(currentStepNr);
+        steps.add(newStepNumber, stepToRearrange);
     }
 }

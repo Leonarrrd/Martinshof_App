@@ -42,19 +42,20 @@ public class ViewTutorialActivity extends AppCompatActivity {
         ((TextView) findViewById(R.id.title)).setText(getIntent().getStringExtra("title"));
 
         mSlideViewPager = (ViewPager) findViewById(R.id.slideViewPager);
+        sliderAdapter = new SliderAdapter(this, getIntent().getStringExtra("tutorial"));
+        mSlideViewPager.setAdapter(sliderAdapter);
+        mSlideViewPager.addOnPageChangeListener(viewListener);
+
+
         mDotLayout = (LinearLayout) findViewById(R.id.dotsLayout);
+        mDotLayout.setX(-23*sliderAdapter.getPages());
+        mDotLayout.requestLayout();
 
         mNextBtn = (Button) findViewById(R.id.nexBtn);
         mBackBtn = (Button) findViewById(R.id.preBtn);
         mDoneBtn = (RadioButton) findViewById(R.id.doneBtn);
-
-        sliderAdapter = new SliderAdapter(this, getIntent().getStringExtra("tutorial"));
-
-        mSlideViewPager.setAdapter(sliderAdapter);
-
         addDotsIndicator(0);
 
-        mSlideViewPager.addOnPageChangeListener(viewListener);
 
         mNextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,7 +63,9 @@ public class ViewTutorialActivity extends AppCompatActivity {
                 if(readyForNextStep) {
                     mSlideViewPager.setCurrentItem(mCurrentPage + 1);
                 } else {
-                    Toast.makeText(ViewTutorialActivity.this, "Du musst erst auf 'erledigt' klicken, um weitermachen zu können.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ViewTutorialActivity.this,
+                            "Du musst erst auf 'erledigt' klicken, um weitermachen zu können.",
+                            Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -89,7 +92,9 @@ public class ViewTutorialActivity extends AppCompatActivity {
         for(int i = 0; i < mDots.length; i++){
             mDots[i] = new TextView(this);
             mDots[i].setText(Html.fromHtml("&#8226"));
-            mDots[i].setTextSize(35);
+            mDots[i].setTextSize(30);
+//            mDots[i].setTextSize(100/sliderAdapter.getPages());
+
             mDots[i].setTextColor(getResources().getColor(R.color.colorAccent));
 
             mDotLayout.addView(mDots[i]);
@@ -106,7 +111,6 @@ public class ViewTutorialActivity extends AppCompatActivity {
                 mNextBtn.setEnabled(true);
                 mBackBtn.setEnabled(false);
                 mBackBtn.setVisibility(View.INVISIBLE);
-
                 mNextBtn.setText("Next");
                 mBackBtn.setText("");
                 mNextBtn.setTextColor(Color.parseColor("#FF000000"));
@@ -115,7 +119,6 @@ public class ViewTutorialActivity extends AppCompatActivity {
                 mBackBtn.setEnabled(true);
                 mNextBtn.setVisibility(View.INVISIBLE);
                 mBackBtn.setVisibility(View.VISIBLE);
-
                 mBackBtn.setText("Back");
                 mBackBtn.setTextColor(Color.parseColor("#FF000000"));
             } else {
@@ -151,7 +154,6 @@ public class ViewTutorialActivity extends AppCompatActivity {
                 mBackBtn.setEnabled(true);
                 mBackBtn.setVisibility(View.VISIBLE);
                 mNextBtn.setVisibility(View.VISIBLE);
-
                 mNextBtn.setText("Next");
                 mBackBtn.setText("Back");
                 mNextBtn.setTextColor(Color.parseColor("#FF88A6C4"));

@@ -2,6 +2,7 @@ package com.example.betreuer.service;
 
 import android.graphics.Bitmap;
 
+import com.example.betreuer.helper.FormatHelper;
 import com.example.betreuer.helper.IOHelper;
 import com.example.betreuer.model.Tutorial;
 
@@ -30,8 +31,7 @@ public class ControllerService {
         for (Tutorial tut : tutorials) {
             titles.add(tut.getTitle());
             Bitmap bm = IOHelper.getImageFromPath(tut.getSteps().get(0).getPathToImage());
-            Bitmap thumbnail = Bitmap.createScaledBitmap(bm, 100, 100, true);
-            thumbnails.add(thumbnail);
+            thumbnails.add(FormatHelper.getThumbnail(bm));
         }
     }
 

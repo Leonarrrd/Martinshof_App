@@ -33,8 +33,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class CreateNewStepActivity extends AppCompatActivity {
-    private int stepNr;
     private boolean isNew;
+    private int stepNr;
     private Tutorial tutorial;
     private EditText subheader;
     private EditText description;
@@ -50,6 +50,16 @@ public class CreateNewStepActivity extends AppCompatActivity {
         tutorial = CreateTutorialActivity.ctx.tutorial; // TODO: see explanation in CreateTutorialActivity
         subheader = (EditText) findViewById(R.id.slide_subheader);
 
+        ((TextView)findViewById(R.id.title)).setText(tutorial.getTitle());
+
+        isNew = getIntent().getBooleanExtra("new", true);
+        if(!isNew){
+            stepNr = getIntent().getIntExtra("stepNr", tutorial.getTotalSteps()+1);
+            Step step = tutorial.getSteps().get(stepNr);
+            ((EditText)findViewById(R.id.slide_subheader)).setText(step.getSubheading());
+            ((EditText)findViewById(R.id.slide_desc)).setText(step.getDescription());
+            ((ImageView)findViewById(R.id.image_view)).setImageBitmap(step.getImage());
+        }
 
         //hides the keyboard when clicking outside edittext
         findViewById(R.id.relativeLayout).setOnTouchListener(new View.OnTouchListener() {
@@ -76,44 +86,26 @@ public class CreateNewStepActivity extends AppCompatActivity {
                 imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
             }
         });
-
-
-        ((TextView)findViewById(R.id.title)).setText(tutorial.getTitle());
-
-        stepNr = getIntent().getIntExtra("stepNr", -99);
-        if (stepNr == -99){
-            UIHelper.showErrorDialog(this, "Hoppla, da ist wohl was schiefgelaufen");
-            finish();
-        }
-
-        isNew = getIntent().getBooleanExtra("new", true);
-        if(!isNew){
-            // TODO: Weg damit!
-            Step step = tutorial.getSteps().get(stepNr);
-            ((EditText)findViewById(R.id.slide_subheader)).setText(step.getSubheading());
-            ((EditText)findViewById(R.id.slide_desc)).setText(step.getDescription());
-            ((ImageView)findViewById(R.id.image_view)).setImageBitmap(step.getImage());
-        }
     }
 
 
     public void finish(View view){
-        // TODO: try to delete?
-        Environment.getExternalStorageState();
         if(((EditText) findViewById(R.id.slide_subheader)).getText().toString().isEmpty()
         || ((EditText) findViewById(R.id.slide_desc)).getText().toString().isEmpty()){
             UIHelper.showErrorDialog(this, "Bitte gebe eine Überschrift und eine Erklärung ein.");
             return;
         }
-        // TODO: wipe this out
-        CreateTutorialActivity.ctx.increaseTotalSteps();
 
         String subheader = ((EditText) findViewById(R.id.slide_subheader)).getText().toString();
         String desc = ((EditText) findViewById(R.id.slide_desc)).getText().toString();
         ImageView iv = findViewById(R.id.image_view);
         BitmapDrawable drawable = (BitmapDrawable) iv.getDrawable();
         Bitmap bitmapImg = drawable.getBitmap();
-        tutorial.addStep(new Step(subheader, desc, bitmapImg));
+        if(isNew){
+            tutorial.addStep(new Step(subheader, desc, bitmapImg));
+        } else {
+            tutorial.changeStep(new Step(subheader, desc, bitmapImg), stepNr);
+        }
         finish();
     }
 

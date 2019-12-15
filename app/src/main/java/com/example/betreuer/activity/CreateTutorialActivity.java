@@ -10,35 +10,26 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.os.Environment;
 import android.text.InputType;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.PopupMenu;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.betreuer.R;
-import com.example.betreuer.helper.ShareHelper;
 import com.example.betreuer.helper.UIHelper;
 import com.example.betreuer.helper.IOHelper;
 import com.example.betreuer.model.Tutorial;
 import com.example.betreuer.service.ControllerService;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,14 +37,13 @@ public class CreateTutorialActivity extends AppCompatActivity {
 
     public Tutorial tutorial; // see problem below
     private ListView listView;
-    private int totalSteps = 0;
     private boolean created = false;
     private ControllerService cs;
     private ListAdapter adapter;
 
 
-    // TODO: this is some hot garbage,
-    // should use startActivityForResult() for this i guess
+    // TODO: this is very not good
+    //  should use startActivityForResult() for this i guess
     public static CreateTutorialActivity ctx;
 
     @Override
@@ -72,14 +62,6 @@ public class CreateTutorialActivity extends AppCompatActivity {
             tutorial.cacheImages();
             created = true;
         }
-/*
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                openEditStepActivity(view);
-            }
-        });*/
-
         ctx = this;
     }
 
@@ -132,7 +114,6 @@ public class CreateTutorialActivity extends AppCompatActivity {
         textMessage.setText(message);
         final EditText editText = customLayout.findViewById(R.id.editText);
         editText.setInputType(InputType.TYPE_CLASS_TEXT);
-        // TODO: Improve Layout of EditText (centering, etc.)
 
         // Set up the buttons
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -154,7 +135,6 @@ public class CreateTutorialActivity extends AppCompatActivity {
                 } else {
                     String tutorialName = editText.getText().toString();
                     ((TextView)findViewById(R.id.title)).setText(tutorialName);
-//                    createSubDirectory();
                     tutorial = new Tutorial(tutorialName);
                 }
             }
@@ -168,39 +148,31 @@ public class CreateTutorialActivity extends AppCompatActivity {
         });
 
         AlertDialog dialog = builder.create();
+        dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(false);
         dialog.show();
     }
 
     public void openCreateStepActivity(View view){
         Intent intent = new Intent(this, CreateNewStepActivity.class);
-        intent.putExtra("title", tutorial.getTitle());
-        intent.putExtra("stepNr", ctx.getTotalSteps()+1);
         intent.putExtra("new", true);
         startActivity(intent);
     }
 
-    public void openEditStepActivity(View view){
-        int step = (Integer) view.getTag();
+    public void openCreateStepActivity(int position){
         Intent intent = new Intent(this, CreateNewStepActivity.class);
-        intent.putExtra("title", tutorial.getTitle());
-        intent.putExtra("stepNr", step);
         intent.putExtra("new", false);
+        intent.putExtra("stepNr", position);
         startActivity(intent);
-    }
-
-    public int getTotalSteps() {
-        return totalSteps;
-    }
-
-    public void increaseTotalSteps() {
-        this.totalSteps++;
     }
 
     public void finish(View view){
         if (listView.getChildCount() > 0) {
             IOHelper.writeTutorialToStorage(tutorial);
-            cs.update();
+        } else {
+            IOHelper.deleteTutorial(tutorial.getTitle());
         }
+        cs.update();
         finish();
     }
 
@@ -229,7 +201,7 @@ public class CreateTutorialActivity extends AppCompatActivity {
 
         @NonNull
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent) {
             LayoutInflater layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             final View row = layoutInflater.inflate(R.layout.row, parent, false);
             row.setTag(position);
@@ -242,27 +214,43 @@ public class CreateTutorialActivity extends AppCompatActivity {
             edButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    PopupMenu popup = new PopupMenu(context, edButton);
-                    popup.inflate(R.menu.tutorial_listview_menu);
+                    final PopupMenu popup = new PopupMenu(context, edButton);
+                    popup.inflate(R.menu.steps_listview_menu);
                     popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                         @Override
                         public boolean onMenuItemClick(MenuItem item) {
                             switch (item.getItemId()) {
                                 case R.id.edit:
-                                    openEditStepActivity(row);
-                                    //Intent intent = new Intent(context, CreateTutorialActivity.class);
-                                  //  intent.putExtra("tutorialName", titles[position]);
-                                   // startActivity(intent);
+                                    openCreateStepActivity(position);
+                                    break;
+                                case R.id.changeStepNumber:
+                                    AlertDialog.Builder b = new AlertDialog.Builder(ctx);
+                                    b.setTitle("Neuer Platz");
+                                    List<String> optionsList = new ArrayList<>();
+                                    for (int i = 0; i < tutorial.getTotalSteps(); i++){
+                                        optionsList.add("" + (i + 1));
+                                    }
+                                    String[] options = optionsList.toArray(new String[optionsList.size()]);
+                                    b.setItems(options, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                            tutorial.rearrangeStep(position, which);
+                                            // TODO: See below
+                                            ((Activity)context).recreate();
+                                        }
+                                    });
+                                    b.show();
                                     break;
                                 case R.id.delete:
-                                   // cs.deleteTutorial(titles[position]);
+                                    tutorial.getSteps().remove(position);
+                                    // cs.deleteTutorial(titles[position]);
                                     // TODO: this doesn't work:
                                     // adapter.notifyDataSetChanged();
                                     // TODO: and this is the shitty workaround for it
+                                    //  this floods the console with WindowLeak error
+                                    //  still works ¯\_(ツ)_/¯
                                     ((Activity)context).recreate();
-                                    break;
-                                case R.id.share:
-                                 //   ShareHelper.shareTutorial(getContext(), titles[position]);
                                     break;
                             }
                             return false;
@@ -272,7 +260,6 @@ public class CreateTutorialActivity extends AppCompatActivity {
                     popup.show();
                 }
             });
-
             return row;
         }
     }
