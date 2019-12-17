@@ -48,10 +48,11 @@
 
     <ImageView
         android:id="@+id/image_view"
-        android:layout_width="419dp"
-        android:layout_height="205dp"
+        android:layout_width="0dp"
+        android:layout_height="201dp"
         android:layout_marginTop="1dp"
         android:onClick="selectImageDialog"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/title"
