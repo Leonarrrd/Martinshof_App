@@ -6,7 +6,6 @@ import com.example.betreuer.helper.FormatHelper;
 import com.example.betreuer.helper.IOHelper;
 import com.example.betreuer.model.Tutorial;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 

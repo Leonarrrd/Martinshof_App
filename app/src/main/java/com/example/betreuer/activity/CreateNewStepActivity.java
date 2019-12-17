@@ -16,13 +16,14 @@ import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.betreuer.R;
-import com.example.betreuer.helper.IOHelper;
 import com.example.betreuer.helper.UIHelper;
 import com.example.betreuer.model.Step;
 import com.example.betreuer.model.Tutorial;
@@ -39,6 +40,9 @@ public class CreateNewStepActivity extends AppCompatActivity {
     private EditText subheader;
     private EditText description;
 
+    private RelativeLayout rootView;
+
+
     // EXPERIMENTAL
     String mCameraFileName = Environment.getExternalStorageDirectory() + "/Martinshof";
     Uri image;
@@ -49,8 +53,11 @@ public class CreateNewStepActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_new_step);
         tutorial = CreateTutorialActivity.ctx.tutorial; // TODO: see explanation in CreateTutorialActivity
         subheader = (EditText) findViewById(R.id.slide_subheader);
+        description = (EditText) findViewById(R.id.slide_desc);
 
         ((TextView)findViewById(R.id.title)).setText(tutorial.getTitle());
+
+        initRootView();
 
         isNew = getIntent().getBooleanExtra("new", true);
         if(!isNew){
@@ -67,6 +74,10 @@ public class CreateNewStepActivity extends AppCompatActivity {
             public boolean onTouch(View v, MotionEvent event) {
                 InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+//                subheader.clearFocus();
+//                description.clearFocus();
+                rootView.getViewTreeObserver();
+                System.out.println("click");
                 return true;
             }
         });
@@ -78,12 +89,28 @@ public class CreateNewStepActivity extends AppCompatActivity {
                 imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
             }
         });
-        description = (EditText) findViewById(R.id.slide_desc);
+
         description.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+            }
+        });
+    }
+
+    private void initRootView() {
+        rootView = findViewById(R.id.addresses_confirm_root_view);
+        rootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                int heightDiff = rootView.getRootView().getHeight() - rootView.getHeight();
+
+                if (heightDiff > 190) {
+                    System.out.println("yes");
+                } else {
+                    System.out.println("no");
+                }
             }
         });
     }

@@ -5,19 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
-import android.widget.Toast;
-
-import com.example.betreuer.BuildConfig;
 
 import org.zeroturnaround.zip.NameMapper;
 import org.zeroturnaround.zip.ZipUtil;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.net.URLConnection;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 import androidx.core.app.ShareCompat;
 import androidx.core.content.FileProvider;
@@ -33,7 +25,7 @@ public class ShareHelper {
     public static void shareTutorial(Context ctx, String tutorialName) {
         zipDirectory(tutorialName);
         File file = new File(app_root, tutorialName + ".tut");
-        Uri sharedFileUri = FileProvider.getUriForFile(ctx, "com.mydomain.fileprovider", file);
+        Uri sharedFileUri = FileProvider.getUriForFile(ctx, "com.betreuer.fileprovider", file);
         Intent intent = ShareCompat.IntentBuilder.from((Activity) ctx)
                 .setStream(sharedFileUri) // uri from FileProvider
                 .setType("*/*")

@@ -6,17 +6,15 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-
-
     <application
         android:name="com.example.betreuer.helper.GlobalContext"
         android:allowBackup="true"
         android:icon="@mipmap/logo"
-        android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:label="Betreuer"
+        android:roundIcon="@mipmap/logo_rounded"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.ReceiveTutorialActivity">
+        <activity android:name="com.example.betreuer.activity.ReceiveTutorialActivity">
             <!-- Register to handle file opening -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -28,7 +26,7 @@
                     android:scheme="file" />
             </intent-filter>
             <intent-filter
-                android:icon="@mipmap/ic_launcher"
+                android:icon="@mipmap/logo_rounded"
                 android:label="@string/app_name"
                 tools:ignore="AppLinkUrlError"
                 android:scheme="http">
@@ -60,11 +58,11 @@
                 <!-- keep going if you need more -->
             </intent-filter>
         </activity>
-        <activity android:name=".activity.ViewTutorialActivity" />
-        <activity android:name=".activity.CreateNewStepActivity" />
-        <activity android:name=".activity.CreateTutorialActivity" />
-        <activity android:name=".activity.ViewTutorialsActivity" />
-        <activity android:name=".activity.MainActivity">
+        <activity android:name="com.example.betreuer.activity.ViewTutorialActivity" />
+        <activity android:name="com.example.betreuer.activity.CreateNewStepActivity" />
+        <activity android:name="com.example.betreuer.activity.CreateTutorialActivity" />
+        <activity android:name="com.example.betreuer.activity.ViewTutorialsActivity" />
+        <activity android:name="com.example.betreuer.activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -76,7 +74,7 @@
 
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="com.mydomain.fileprovider"
+            android:authorities="com.betreuer.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
