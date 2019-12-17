@@ -6,51 +6,20 @@
     android:layout_height="match_parent"
     tools:context=".activity.MainActivity">
 
-    <!--
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_centerHorizontal="false"
-        android:background="@color/header"
-        android:fontFamily="@font/helvetica"
-        android:gravity="center"
-        android:text="Herzlich Willkommen!"
-        android:textColor="#FFFFFF"
-        android:textSize="30sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/line"
-        style="?android:attr/listSeparatorTextViewStyle"
-        android:layout_width="match_parent"
-        android:layout_height="3dp"
-        android:background="#000"
-        android:gravity="center_horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/title" />
-    -->
-
     <Button
         android:id="@+id/view_tutorials_btn"
         style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="414dp"
-        android:layout_height="400dp"
-        android:background="@drawable/bg_blue"
-        android:fontFamily="@font/montserrat_regular"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/bg_g_btn"
+        android:gravity="center"
         android:lineSpacingExtra="8sp"
         android:onClick="openCategory"
         android:tag="view_tutorials_btn"
         android:text="Tutorials \nansehen"
         android:textColor="#000000"
         android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/line2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -63,20 +32,15 @@
         android:background="#000"
         android:gravity="center_vertical"
 
-        app:layout_constraintBottom_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/line"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/create_new_tutorial_btn"
         style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="414dp"
-        android:layout_height="412dp"
-        android:background="@drawable/hintergrund_2"
-        android:fontFamily="@font/montserrat_regular"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/bg_y_btn"
         android:lineSpacingExtra="8sp"
         android:onClick="openCategory"
         android:tag="create_new_tutorial_btn"
@@ -85,6 +49,8 @@
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/line2" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
