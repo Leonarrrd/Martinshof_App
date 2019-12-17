@@ -1,41 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="110dp"
-    android:padding="16dp"
-    >
+    android:orientation="horizontal"
+    android:padding="16dp">
 
-    <ImageView
-    android:id="@+id/imageView"
-    android:layout_width="75dp"
-    android:layout_height="75dp"
-    android:src="@mipmap/ic_launcher_round"
-    android:bottomRightRadius="80dp"
-    android:bottomLeftRadius="80dp"
-    android:topRightRadius="80dp"
-    android:topLeftRadius="80dp"/>
+    <!--  <ImageView
+      android:id="@+id/imageView"
+      android:layout_width="75dp"
+      android:layout_height="75dp"
+      android:src="@mipmap/ic_launcher_round"
+      android:bottomRightRadius="80dp"
+      android:bottomLeftRadius="80dp"
+      android:topRightRadius="80dp"
+      android:topLeftRadius="80dp"/>-->
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/imageView"
+        android:layout_width="65dp"
+        android:layout_height="65dp"
+        android:src="@mipmap/ic_launcher_round"
+        android:layout_margin="5dp"/>
 
     <TextView
-    android:id="@+id/textView1"
-    android:layout_width="235dp"
-    android:layout_height="wrap_content"
-    android:layout_margin="5dp"
-    android:paddingLeft="20dp"
-    android:paddingTop="20dp"
-    android:text="Main Title"
-    android:textColor="#000"
-    android:textSize="20sp"
-    android:textStyle="bold" />
+         android:id="@+id/textView1"
+         android:layout_width="235dp"
+         android:layout_height="wrap_content"
+         android:layout_margin="5dp"
+         android:paddingLeft="20dp"
+         android:paddingTop="20dp"
+         android:text="Main Title"
+         android:textColor="#000"
+         android:textSize="20sp"
+         android:textStyle="bold" />
 
-        <!--        <ImageView-->
-        <!--            android:id="@+id/imageView2"-->
-        <!--            android:layout_width="63dp"-->
-        <!--            android:layout_height="75dp"-->
-        <!--            android:paddingLeft="20dp"-->
-        <!--            android:src="@drawable/ic_more_vert_darkgrey"-->
-        <!--            android:onClick="openContextMenu" />-->
+     <!--        <ImageView-->
+    <!--            android:id="@+id/imageView2"-->
+    <!--            android:layout_width="63dp"-->
+    <!--            android:layout_height="75dp"-->
+    <!--            android:paddingLeft="20dp"-->
+    <!--            android:src="@drawable/ic_more_vert_darkgrey"-->
+    <!--            android:onClick="openContextMenu" />-->
 
 
     <!--   <TextView
@@ -48,9 +54,9 @@
           android:textAppearance="?android:textAppearanceLarge" />-->
 
     <Button
-    android:id="@+id/edButton"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:background="@drawable/ic_more_vert_darkgrey"/>
+        android:id="@+id/edButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ic_more_vert_darkgrey" />
 
 </LinearLayout>
