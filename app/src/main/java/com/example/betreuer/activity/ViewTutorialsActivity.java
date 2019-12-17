@@ -65,31 +65,6 @@ public class ViewTutorialsActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.tutorials_listview_menu, menu);
     }
-/*
-
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        String tutorialName = listView.getChildAt(info.position-listView.getFirstVisiblePosition()).getTag().toString();
-
-        switch (item.getItemId()) {
-            case R.id.edit:
-                Intent intent = new Intent(this, CreateTutorialActivity.class);
-                intent.putExtra("tutorialName", tutorialName);
-                startActivity(intent);
-                return true;
-            case R.id.delete:
-                IOHelper.deleteDirectory(tutorialName);
-                // TODO: this doesn't work:
-//                adapter.notifyDataSetChanged();
-                // TODO: and this is the shitty workaround for it
-                this.recreate();
-                return true;
-            default:
-                return super.onContextItemSelected(item);
-        }
-    }
-*/
 
     class ListAdapter extends ArrayAdapter<String> {
         Context context;
@@ -114,6 +89,13 @@ public class ViewTutorialsActivity extends AppCompatActivity {
             final Button edButton = row.findViewById(R.id.edButton);
             thumbnail.setImageBitmap(thumbnails[position]);
             title.setText(titles[position]);
+
+            thumbnail.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    openTutorial(row);
+                }
+            });
 
             title.setOnClickListener(new View.OnClickListener() {
                 @Override
