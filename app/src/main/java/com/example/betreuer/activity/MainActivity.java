@@ -22,7 +22,6 @@ public class MainActivity extends AppCompatActivity {
         checkFilePermissions();
         IOHelper.createDirectory();
         ControllerService cs = ControllerService.getInstance();
-        System.out.println(cs.getTutorials());
     }
 
     @Override

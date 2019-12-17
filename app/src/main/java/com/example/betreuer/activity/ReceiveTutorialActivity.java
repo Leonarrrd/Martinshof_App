@@ -68,6 +68,15 @@ public class ReceiveTutorialActivity extends AppCompatActivity {
         startActivity(new Intent(this, ViewTutorialsActivity.class));
     }
 
+    /**
+     * Make sure to skip back to Telegram/Whatsapp on Backpressed of ViewTutorialsActivity
+     */
+    @Override
+    public void onResume() {
+        super.onResume();
+        onBackPressed();
+    }
+
     public String getFileName(Uri uri) {
         String result = null;
         if (uri.getScheme().equals("content")) {

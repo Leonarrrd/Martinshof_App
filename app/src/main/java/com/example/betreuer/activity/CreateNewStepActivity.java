@@ -40,12 +40,8 @@ public class CreateNewStepActivity extends AppCompatActivity {
     private EditText subheader;
     private EditText description;
 
-    private RelativeLayout rootView;
-
-
     // EXPERIMENTAL
     String mCameraFileName = Environment.getExternalStorageDirectory() + "/Martinshof";
-    Uri image;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +53,6 @@ public class CreateNewStepActivity extends AppCompatActivity {
 
         ((TextView)findViewById(R.id.title)).setText(tutorial.getTitle());
 
-        initRootView();
 
         isNew = getIntent().getBooleanExtra("new", true);
         if(!isNew){
@@ -76,8 +71,6 @@ public class CreateNewStepActivity extends AppCompatActivity {
                 imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
 //                subheader.clearFocus();
 //                description.clearFocus();
-                rootView.getViewTreeObserver();
-                System.out.println("click");
                 return true;
             }
         });
@@ -99,21 +92,6 @@ public class CreateNewStepActivity extends AppCompatActivity {
         });
     }
 
-    private void initRootView() {
-        rootView = findViewById(R.id.addresses_confirm_root_view);
-        rootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                int heightDiff = rootView.getRootView().getHeight() - rootView.getHeight();
-
-                if (heightDiff > 190) {
-                    System.out.println("yes");
-                } else {
-                    System.out.println("no");
-                }
-            }
-        });
-    }
 
 
     public void finish(View view){
@@ -159,9 +137,11 @@ public class CreateNewStepActivity extends AppCompatActivity {
         builder.show();
     }
 
+    // TODO: Clean up requestCode 1
     protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
         super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
         ImageView imageView = findViewById(R.id.image_view);
+        Uri image = null;
 
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == 0){

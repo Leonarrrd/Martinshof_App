@@ -41,7 +41,7 @@ public class CreateTutorialActivity extends AppCompatActivity {
     private ListAdapter adapter;
 
 
-    // TODO: this is very not good
+    //  TODO: this is very not good
     //  should use startActivityForResult() for this i guess
     public static CreateTutorialActivity ctx;
 
@@ -89,6 +89,7 @@ public class CreateTutorialActivity extends AppCompatActivity {
                     case DialogInterface.BUTTON_POSITIVE:
                         break;
                     case DialogInterface.BUTTON_NEGATIVE:
+                        cs.update();
                         finish();
                         break;
                 }
@@ -180,6 +181,8 @@ public class CreateTutorialActivity extends AppCompatActivity {
             UIHelper.showErrorDialog(this,"Bitte erstelle mindestens einen Schritt");
             return;
         }
+        if(!cs.getTutorials().contains(tutorial))
+            cs.getTutorials().add(tutorial);
         Intent intent = new Intent(this, ViewTutorialActivity.class);
         intent.putExtra("tutorial", tutorial.getTitle());
         intent.putExtra("title", tutorial.getTitle());
@@ -236,7 +239,12 @@ public class CreateTutorialActivity extends AppCompatActivity {
                                             dialog.dismiss();
                                             tutorial.rearrangeStep(position, which);
                                             // TODO: See below
-                                            ((Activity)context).recreate();
+                                            if(!cs.getTutorials().contains(tutorial))
+                                                cs.getTutorials().add(tutorial);
+                                            finish();
+                                            Intent intent = new Intent(context, CreateTutorialActivity.class);
+                                            intent.putExtra("tutorialName", tutorial.getTitle());
+                                            startActivity(intent);
                                         }
                                     });
                                     b.show();
@@ -246,10 +254,13 @@ public class CreateTutorialActivity extends AppCompatActivity {
                                     // cs.deleteTutorial(titles[position]);
                                     // TODO: this doesn't work:
                                     // adapter.notifyDataSetChanged();
-                                    // TODO: and this is the shitty workaround for it
-                                    //  this floods the console with WindowLeak error
-                                    //  still works ¯\_(ツ)_/¯
-                                    ((Activity)context).recreate();
+                                    // but this still works ¯\_(ツ)_/¯
+                                    if(!cs.getTutorials().contains(tutorial))
+                                        cs.getTutorials().add(tutorial);
+                                    finish();
+                                    Intent intent = new Intent(context, CreateTutorialActivity.class);
+                                    intent.putExtra("tutorialName", tutorial.getTitle());
+                                    startActivity(intent);
                                     break;
                             }
                             return false;

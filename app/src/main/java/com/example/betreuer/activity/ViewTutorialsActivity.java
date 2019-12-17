@@ -50,11 +50,6 @@ public class ViewTutorialsActivity extends AppCompatActivity {
         listView.setAdapter(adapter);
     }
 
-    @Override
-    public void onBackPressed() {
-        startActivity(new Intent(this, MainActivity.class));
-    }
-
     private void openTutorial(View view){
         Intent intent = new Intent(this, ViewTutorialActivity.class);
         String tagString = (String) view.getTag();
